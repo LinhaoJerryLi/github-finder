@@ -2,20 +2,23 @@ import "./App.css";
 import React, { Component, Fragment } from "react";
 import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
+import Search from "./components/users/Search";
 import axios from "axios";
 
 class App extends Component {
   state = {
     users: [],
-    // while it's loading show spiner
     loading: false,
   };
-  // This will run when the component mounts
-  // we want this in async way
   async componentDidMount() {
-    // we cannot do this.state = ....
     this.setState({ loading: true });
-    const res = await axios.get("https://api.github.com/users");
+    // add github api
+    const res = await axios.get(
+      // here it's ` not '
+      `https://api.github.com/users?\
+      client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&\
+      client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
     this.setState({ users: res.data, loading: false });
   }
 
@@ -24,6 +27,7 @@ class App extends Component {
       <Fragment>
         <Navbar />
         <div className='container'>
+          <Search />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </Fragment>
