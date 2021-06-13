@@ -1,23 +1,19 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useContext } from "react";
 import Spinner from "../layout/Spinner";
 import Repos from "../repos/Repos";
-import PropTypes from "prop-types";
+import GithubContext from "../../context/github/githubContext";
 import { Link } from "react-router-dom";
 
-const User = ({ user, loading, repos, getUser, getUserRepos, match }) => {
-  // Different from componentDidMount(), it runs on all updates
-  // [repos]: runs when repos change
-  // []: run once
+const User = ({ match }) => {
+  const githubContext = useContext(GithubContext);
+  const { getUser, user, loading, repos, getUserRepos } = githubContext;
+
   useEffect(() => {
     getUser(match.params.login);
     getUserRepos(match.params.login);
     // eslint-disable-next-line
   }, []);
 
-  // componentDidMount() {
-  // }
-
-  // because we just pulled user
   const {
     name,
     avatar_url,
@@ -100,14 +96,6 @@ const User = ({ user, loading, repos, getUser, getUserRepos, match }) => {
       <Repos repos={repos} />
     </Fragment>
   );
-};
-
-User.propTypes = {
-  loading: PropTypes.bool,
-  user: PropTypes.object.isRequired,
-  getUser: PropTypes.func.isRequired,
-  getUserRepos: PropTypes.func.isRequired,
-  reops: PropTypes.array.isRequired,
 };
 
 export default User;
